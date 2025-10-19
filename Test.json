@@ -1,0 +1,107 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text":"Australian Orienteering Events by State", "fontSize":18},
+
+  "width": "container",
+  "height": 500,
+  "params": [
+    {
+      "name": "stateSelect",
+      "value": "All Australia",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All Australia",
+          "New South Wales",
+          "Victoria",
+          "Queensland",
+          "South Australia",
+          "Western Australia",
+          "Tasmania",
+          "Northern Territory",
+          "Australian Capital Territory"
+        ],
+        "name": "Select State: "
+      }
+    }
+  ],
+  "projection": {
+    "type": "mercator",
+    "scale": {
+      "expr": "stateSelect == 'Western Australia' ? 1100 : stateSelect == 'Queensland' ? 1400 : stateSelect == 'New South Wales' ? 2500 : stateSelect == 'Victoria' ? 4000 : stateSelect == 'South Australia' ? 2000 : stateSelect == 'Tasmania' ? 4500 : stateSelect == 'Northern Territory' ? 1600 : stateSelect == 'Australian Capital Territory' ? 12000 : 660"
+    },
+    "center": {
+      "expr": "stateSelect == 'Western Australia' ? [122.0, -25.5] : stateSelect == 'Queensland' ? [145.0, -20.3] : stateSelect == 'New South Wales' ? [147.0, -32.8] : stateSelect == 'Victoria' ? [145.2, -36.5] : stateSelect == 'South Australia' ? [136.5, -32] : stateSelect == 'Tasmania' ? [146.8, -42.0] : stateSelect == 'Northern Territory' ? [133.0, -19.0] : stateSelect == 'Australian Capital Territory' ? [149.1, -35.4] : [133, -27]"
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/jlov0010/3179/main/Aus_Map.json",
+        "format": {"type": "topojson", "feature": "SA3_2021_AUST_GDA2020"}
+      },
+      "mark": {"type": "geoshape", "fill": "#F0F0F0", "stroke": "#CCCCCC"},
+      "transform": [
+        {"filter": "stateSelect == 'All Australia' || datum.properties.STE_NAME21 != stateSelect"}
+      ]
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/jlov0010/3179/main/Aus_Map.json",
+        "format": {"type": "topojson", "feature": "SA3_2021_AUST_GDA2020"}
+      },
+      "transform": [
+        {"filter": "stateSelect == 'All Australia' || datum.properties.STE_NAME21 == stateSelect"}
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#EBEBFF",
+        "stroke": "#0000AA",
+        "strokeWidth": 0.3
+      },
+      "encoding": {
+        "tooltip": {
+          "field": "properties.SA3_NAME21",
+          "type": "nominal",
+          "title": "SA3 region"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/jlov0010/3179/main/Full%20File.csv"
+      },
+      "mark": {"type": "circle", "opacity": 0.5, "size": 10, "color": "black"},
+      "transform": [
+        {
+          "filter": "datum.Latitude != null && datum.Longitude != null && !isNaN(datum.Latitude) && !isNaN(datum.Longitude) && datum.Entries > 0"
+        },
+        {
+          "filter": "datum['Primary Club'] !== 'Orienteering New South Wales' && datum['Primary Club'] !== 'QLD Cyclones' && datum['Primary Club'] !== 'Orienteering WA' && datum['Primary Club'] !== 'Orienteering ACT' && datum['Primary Club'] !== 'Orienteering SA' && datum['Primary Club'] !== 'Orienteering Victoria' && datum['Primary Club'] !== 'Orienteering Queensland' && datum['Primary Club'] !== 'Orienteering South Australia' && datum['Primary Club'] !== 'Orienteering Western Australia' && datum['Primary Club'] !== 'Orienteering Tasmania' && datum['Primary Club'] !== 'Orienteering Northern Territory' && datum['Primary Club'] !== 'Orienteering Australian Capital Territory'"
+        },
+        {
+          "filter": "!(datum.Latitude > -18.8136 && datum.Longitude < 120.1816)"
+        }
+      ],
+      "encoding": {
+        "longitude": {"field": "Longitude", "type": "quantitative"},
+        "latitude": {"field": "Latitude", "type": "quantitative"},
+        "tooltip": [
+          {"field": "Primary Club", "type": "nominal", "title": "Club"},
+          {"field": "Entries", "type": "quantitative", "format": ","}
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/jlov0010/3179/main/Aus_Map.json",
+        "format": {"type": "topojson", "feature": "SA3_2021_AUST_GDA2020"}
+      },
+      "transform": [
+        {"filter": "stateSelect != 'All Australia' && datum.properties.STE_NAME21 != stateSelect"}
+      ],
+      "mark": {"type": "geoshape", "fill": "white", "opacity": 1}
+    }
+  ],
+  "config": {"view": {"stroke": "transparent"}}
+}

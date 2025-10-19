@@ -1,0 +1,154 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text":"Australian Total Entries by State and Year", "fontSize":18},
+  "data": {
+    "url": "https://raw.githubusercontent.com/jlov0010/3179/main/Full%20File.csv"
+  },
+  "width": "container",
+  "height": 350,
+  "transform": [
+    {"filter": "datum['Primary State'] !== '0'"},
+    {"filter": "datum['Primary State'] !== null && datum['Primary State'] !== ''"}
+  ],
+  "layer": [
+    {
+      "mark": {"type": "line"},
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "ordinal",
+          "title": "Year",
+          "axis": {"format": "d", "labelAngle": 0}
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "Entries",
+          "type": "quantitative",
+          "title": "Total Entries"
+        },
+        "color": {
+          "field": "Primary State",
+          "type": "nominal",
+          "title": "State",
+          "scale": {
+            "domain": [
+              "Orienteering ACT",
+              "Orienteering NSW",
+              "Orienteering Queensland",
+              "Orienteering SA",
+              "Orienteering Tasmania",
+              "Orienteering Victoria",
+              "Orienteering WA",
+              "Average (Across States)"
+            ],
+            "range": [
+              "#1b9e77",
+              "#d95f02",
+              "#7570b3",
+              "#e7298a",
+              "#66a61e",
+              "#e6ab02",
+              "#a6761d",
+              "black"
+            ]
+          }
+        },
+        "tooltip": [
+          {"field": "Year", "type": "ordinal"},
+          {"field": "Primary State", "type": "nominal", "title": "State"},
+          {
+            "aggregate": "sum",
+            "field": "Entries",
+            "type": "quantitative",
+            "title": "Total Entries",
+            "format": ",.0f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 45},
+      "encoding": {
+        "x": {"field": "Year", "type": "ordinal"},
+        "y": {"aggregate": "sum", "field": "Entries", "type": "quantitative"},
+        "color": {"field": "Primary State", "type": "nominal"},
+        "tooltip": [
+          {"field": "Year", "type": "ordinal"},
+          {"field": "Primary State", "type": "nominal", "title": "State"},
+          {
+            "aggregate": "sum",
+            "field": "Entries",
+            "type": "quantitative",
+            "title": "Total Entries",
+            "format": ",.0f"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "aggregate": [
+            {"op": "sum", "field": "Entries", "as": "state_year_sum"}
+          ],
+          "groupby": ["Year", "Primary State"]
+        },
+        {
+          "aggregate": [
+            {"op": "mean", "field": "state_year_sum", "as": "avg_entries_across_states"}
+          ],
+          "groupby": ["Year"]
+        },
+        {"calculate": "'Average (Across States)'", "as": "Primary State"}
+      ],
+      "layer": [
+        {
+          "mark": {
+            "type": "line",
+            "strokeDash": [4, 4],
+            "strokeWidth": 2
+          },
+          "encoding": {
+            "x": {"field": "Year", "type": "ordinal"},
+            "y": {"field": "avg_entries_across_states", "type": "quantitative"},
+            "color": {
+              "field": "Primary State",
+              "type": "nominal",
+              "title": "State"
+            },
+            "tooltip": [
+              {"field": "Year", "type": "ordinal"},
+              {
+                "field": "avg_entries_across_states",
+                "type": "quantitative",
+                "title": "Average Entries (per state)",
+                "format": ",.0f"
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "size": 45,
+            "color": "black"
+          },
+          "encoding": {
+            "x": {"field": "Year", "type": "ordinal"},
+            "y": {"field": "avg_entries_across_states", "type": "quantitative"},
+            "tooltip": [
+              {"field": "Year", "type": "ordinal"},
+              {
+                "field": "avg_entries_across_states",
+                "type": "quantitative",
+                "title": "Average Entries",
+                "format": ",.0f"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

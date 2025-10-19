@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Three Visualisations Layout</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'EB Garamond', serif;
+      background-color: #fafafa;
+    }
+    .page {padding: 1em; max-width: 1200px; margin: 0 auto;}
+
+    /* Row Box */
+    .vis-row {
+      display: flex;
+      flex-wrap: wrap;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+      margin-bottom: 30px;
+      overflow: hidden;
+      box-sizing: border-box;
+      justify-content: flex-start;
+    }
+
+    /* Left Right Parts */
+    .description,
+    .vis-container {box-sizing: border-box;padding: 15px;}
+
+    /* Text Area */
+    .description {flex: 1 1 33%;min-width: 250px;background-color: #fffefc;}
+
+    /* Chart Area */
+    .vis-container {flex: 1 1 67%;min-width: 300px;min-height: 300px;background-color: #fdfdfd;align-self: center;padding-left: 0;}
+
+    /* Divider Left Tex */
+    .vis-row.left-text .description {border-right: 1px solid #ccc;}
+
+    /* Divider Right Text */
+    .vis-row.right-text .description {border-left: 1px solid #ccc;order: 2;}
+
+    h1 {text-align: center;margin-bottom: 1.5em;}
+
+    h2 {margin-top: 0;}
+
+    /* Layout */
+    @media (max-width: 800px) {.vis-row {flex-direction: column;}
+      .vis-row.left-text .description,
+      .vis-row.right-text .description {border-right: none;border-left: none;border-bottom: 1px solid #ccc;}}
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+    <h1>Changes in Orienteering (2016-2025)</h1>
+    <!-- Row 1 Left Text-->
+    <div class="vis-row left-text">
+      <div class="description">
+        <h2>Overview and Definitions</h2>
+        <p>Orienteering is a sport where competitors use a map and compass to navigate from point to point as fast as
+          possible. Controls are physical markers on the course. Competitors must navigate their way between these to
+          complete their course. The terrain in which courses are set can vary significantly. Traditionally events are
+          usually set in forests or bushland, however the sport has expanded to include events set schools, universities, parks, and streets.</p>
+        <p>The most common type of orienteering is done on foot. There are also events that use mountain bikes or skis, and other events that use radio direction finding transmitters rather than maps.</p>
+        <p>As seen on the map to the right, there is a general trend of most events being in or around major cities, especially around the population centres of the eastern states. This is generally due to events near cities being easier to reach for most participants and therefore being more enticing for clubs.</p>
+        <p>To zoom into a specific state to better see event distribution use the selection tool at the bottom left of the map.</p>
+      </div>
+      <div class="vis-container" id="vis1"></div>
+    </div>
+
+    <!-- Row 2 Right Text-->
+    <div class="vis-row right-text">
+      <div class="vis-container" id="vis2"></div>
+      <div class="description">
+        <h2>Different Distance Catagories for Events</h2>
+        <p>The distance types of events for orienteering are typically classified into three categories. Long distance events are
+          nearly exclusively in forests or bushland and can be up to 20 km in length.</p>
+        <p>Middle distance is primarily comprised of Park & Street events. These events are run on very simplified maps
+          in city suburbs and typically range from 3–10 km in length.</p>
+        <p>Sprint events are short events typically 2–4 km in length. These events are run mostly on school or university
+          campuses and require far more technical high-speed navigation.</p>
+        <p>Over the last decade the grapic shows that middle distance events are becoming less popular to run, with them being replaced mostly by a major increase in the popularity of long distance events, but also by a steady increase in the popularity of sprint events, which is still a relatively new format.</p>
+      </div>
+    </div>
+
+    <!-- Row 3 Left Text-->
+    <div class="vis-row left-text">
+      <div class="description">
+        <h2>Significant Recent Events</h2>
+<p>There are two major causes of changes to entries in the last decade. </p>
+<p>The first major cause was Covid. This caused a noticable decrease in attendance, which is seen in the national average but especialy for Victoria and NSW, the states hit hardest with Covid restrictions. </p>
+<p>The second major cause is the annual national championship that is held in a different state each year. This is the biggest regular competition in Australia and as a result the hosting state often has a signifcant increase in entries. This is seen for NSW in 2017, South Australia in 2018, ACT in 2019, Victoria in 2022, WA for 2023, NSW for 2024 and Queensland for 2025.</p>
+<p>There is a decrease in entries for 2025, this is just due to the year being incomplete, this year is still important to show the increase of entries in Queensland from the recent 2025 national championship.</p>
+      </div>
+      <div class="vis-container" id="vis3"></div>
+    </div>
+
+    <!-- Row 2 Right Text-->
+    <div class="vis-row right-text">
+      <div class="vis-container" id="vis4"></div>
+      <div class="description">
+        <h2>International Events</h2>
+        <p>Here is a visualisation of all the national and international level events hosted in the last 10 years. This includes both national championships and the junior and senior world championships. As can be seen, Scandinavia has by far the strongest presence of large orienteering events as this was the region that developed and popularised the sport.</p>
+        <p>Europe as a whole has a generally strong presence due to its early adoption of the sport and the relative small country sizes meaning travelling to events is far easier.</p>
+        <p>Outside Europe there is a growing presence in Australia, China, Japan and New Zealand.</p>
+        <p>Some countries do not maintain entry records for most of their events. Countries with less than 10 times more entries than events is one of these.</p>
+        <p>To zoom into a specific continent to better see event distribution use the selection tool at the bottom left of the map.</p>
+      </div>
+    </div>
+    <!-- Row 5 Left Text-->
+    <div class="vis-row left-text">
+      <div class="description">
+        <h2>Types of International Orienteering Competitions</h2>
+<p>Foot orienteering is the traditional style of orienteering done in all terrains from forests to university campuses to city streets. Being the origional form of orienteering it is by far the most common type for international events. The graphic shows that the number of annual events has increased slightly overall since 2016. It also shows the major impact Covid had, with major reductions in events in 2020 and 2021.</p>
+<p>Mountain bike and ski orienteering are similar to foot orienteering only done with mountain bikes and skis, these formats are more niche with fewer international events. There however is an significant difference, mountain bike orienteering events reduced by 90% due to Covid in 2020, whilst ski orienteering only had a relatively minor dip. This is because of the isolated nature of ski orienteering.</p>
+<p>Finally, trail orienteering is a more recent more accessable form of orienteering that sticks purely to paths to allow fair competition to those with mobility restrictions. This format is the only type of international competition to suffer no impacts whatsoever due to Covid. With the the exclusion of 2018 the format is consistently becoming more popular.</p>
+      </div>
+      <div class="vis-container" id="vis5"></div>
+    </div>
+<footer>
+  <p style="text-align:center; font-size:0.9em; color:#666;">
+    Author: James Love<br>
+    Date: 19/10/2025<br>
+    Data Sources:<br>
+    <a href="https://eventor.orienteering.org/Events?map=false&mode=List&showMyEvents=true&cancelled=false" target="_blank">International Orienteering Federation Event Calendar</a><br>
+    <a href="https://eventor.orienteering.asn.au/Events" target="_blank">Australian Orienteering Federation Event Calendar</a>
+  </p>
+</footer>
+  </div>
+
+  <script>
+    const specs = [
+      { id: '#vis3', path: './Line Chart.json' },
+      { id: '#vis2', path: './Event type bar.json' },
+      { id: '#vis1', path: './Test.json' },
+      { id: '#vis4', path: './Global Map.json' },
+      { id: '#vis5', path: './Event Count Line.json' }
+    ];
+
+    specs.forEach(chart =>{fetch(chart.path).then(res => res.json()).then(spec => {spec.autosize = { type: "fit", contains: "padding" };
+          /* Font */
+          spec.config = spec.config || {};
+          spec.config = {...spec.config,font: 'EB Garamond',axis: { labelFont: 'EB Garamond', titleFont: 'EB Garamond' },legend: { labelFont: 'EB Garamond', titleFont: 'EB Garamond' },header: { labelFont: 'EB Garamond', titleFont: 'EB Garamond' }};
+          vegaEmbed(chart.id, spec, { actions: false }).catch(console.error);
+        });
+    });
+  </script>
+
+</body>
+
+</html>

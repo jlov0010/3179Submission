@@ -1,0 +1,104 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text":"International Orienteering Events Over Time", "fontSize":18},
+  "width": "container",
+  "height": 400,
+
+  "data": {
+    "values": [
+      {"Year": 2016, "Type": "Foot", "Events": 142},
+      {"Year": 2017, "Type": "Foot", "Events": 131},
+      {"Year": 2018, "Type": "Foot", "Events": 137},
+      {"Year": 2019, "Type": "Foot", "Events": 156},
+      {"Year": 2020, "Type": "Foot", "Events": 50},
+      {"Year": 2021, "Type": "Foot", "Events": 105},
+      {"Year": 2022, "Type": "Foot", "Events": 153},
+      {"Year": 2023, "Type": "Foot", "Events": 170},
+      {"Year": 2024, "Type": "Foot", "Events": 192},
+      {"Year": 2025, "Type": "Foot", "Events": 176},
+
+      {"Year": 2016, "Type": "Mountain Bike", "Events": 24},
+      {"Year": 2017, "Type": "Mountain Bike", "Events": 22},
+      {"Year": 2018, "Type": "Mountain Bike", "Events": 23},
+      {"Year": 2019, "Type": "Mountain Bike", "Events": 19},
+      {"Year": 2020, "Type": "Mountain Bike", "Events": 2},
+      {"Year": 2021, "Type": "Mountain Bike", "Events": 15},
+      {"Year": 2022, "Type": "Mountain Bike", "Events": 18},
+      {"Year": 2023, "Type": "Mountain Bike", "Events": 23},
+      {"Year": 2024, "Type": "Mountain Bike", "Events": 13},
+      {"Year": 2025, "Type": "Mountain Bike", "Events": 21},
+
+      {"Year": 2016, "Type": "Ski", "Events": 22},
+      {"Year": 2017, "Type": "Ski", "Events": 26},
+      {"Year": 2018, "Type": "Ski", "Events": 20},
+      {"Year": 2019, "Type": "Ski", "Events": 27},
+      {"Year": 2020, "Type": "Ski", "Events": 15},
+      {"Year": 2021, "Type": "Ski", "Events": 16},
+      {"Year": 2022, "Type": "Ski", "Events": 24},
+      {"Year": 2023, "Type": "Ski", "Events": 24},
+      {"Year": 2024, "Type": "Ski", "Events": 20},
+      {"Year": 2025, "Type": "Ski", "Events": 18},
+
+      {"Year": 2016, "Type": "Trail", "Events": 21},
+      {"Year": 2017, "Type": "Trail", "Events": 19},
+      {"Year": 2018, "Type": "Trail", "Events": 10},
+      {"Year": 2019, "Type": "Trail", "Events": 18},
+      {"Year": 2020, "Type": "Trail", "Events": 22},
+      {"Year": 2021, "Type": "Trail", "Events": 20},
+      {"Year": 2022, "Type": "Trail", "Events": 23},
+      {"Year": 2023, "Type": "Trail", "Events": 21},
+      {"Year": 2024, "Type": "Trail", "Events": 26},
+      {"Year": 2025, "Type": "Trail", "Events": 27}
+    ]
+  },
+
+  "params": [
+    {
+      "name": "selectedType",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "options": ["All", "Foot", "Mountain Bike", "Ski", "Trail"],
+        "labels": ["All", "Foot", "Mountain Bike", "Ski", "Trail"],
+        "name": "Select Orienteering Type: "
+      }
+    }
+  ],
+
+  "transform": [
+    {"filter": "selectedType == 'All' || datum.Type == selectedType"}
+  ],
+
+  "mark": {"type": "area"},
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "quantitative",
+      "title": "Year",
+      "axis": {"labelAngle": 0, "tickCount": 10}
+    },
+    "y": {
+      "field": "Events",
+      "type": "quantitative",
+      "stack": "zero",
+      "title": "Number of Events"
+    },
+    "color": {
+      "field": "Type",
+      "type": "nominal",
+      "title": "Orienteering Type",
+      "scale": {
+        "domain": ["Foot", "Mountain Bike", "Ski", "Trail"],
+        "range": ["#377eb8", "#e41a1c", "#4daf4a", "#984ea3"]
+      },
+      "legend": {"title": "Type"}
+    },
+    "tooltip": [
+      {"field": "Year", "type": "quantitative"},
+      {"field": "Type", "type": "nominal"},
+      {"field": "Events", "type": "quantitative"}
+    ]
+  },
+
+  "view": {"stroke": null}
+}

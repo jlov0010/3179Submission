@@ -1,0 +1,70 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text":"Australian Event Distances by Year","fontSize":18},
+  "data": {"url": "https://raw.githubusercontent.com/jlov0010/3179/main/Full%20File.csv"},
+  "width": "container",
+  "height": 350,
+  "transform": [
+    {"filter": "datum.Distance === 'Long' || datum.Distance === 'Middle' || datum.Distance === 'Sprint'"},
+    {"joinaggregate": [{"op": "count", "as": "Total_Events_In_Year"}], "groupby": ["Year"]},
+    {"calculate": "1 / datum.Total_Events_In_Year", "as": "Proportion_Unit"}
+  ],
+  "layer": [
+    {
+      "mark": {"type": "bar"},
+      "encoding": {
+        "x": {"field": "Year","type": "ordinal","title": "Year","axis": {"labelAngle": 0}},
+        "y": {"aggregate": "count","type": "quantitative","stack": "normalize","title": "Proportion of Total Events (%)","axis": {"format": ".0%"}},
+        "color": {
+          "field": "Distance","type": "nominal","title": "Distance Category",
+          "scale": {"domain": ["Long","Middle","Sprint"], "range": ["#66c2a5","#fc8d62","#8da0cb"]}
+        },
+        "tooltip": [
+          {"field": "Year", "type": "ordinal"},
+          {"field": "Distance", "type": "nominal", "title": "Event Distance"},
+          {"aggregate": "count", "field": "*", "title": "Number of Events", "format": ","},
+          {"field": "Proportion_Unit", "aggregate": "sum", "title": "Percentage of Year's Events", "format": ".1%"}
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "Year": "2020",
+            "Proportion": 0.60,
+            "text": "2020 saw the beginning of a major shift away\nfrom middle distance in favour of sprint and long distance"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 8,
+        "dy": -30,
+        "fontSize": 12,
+        "color": "black",
+        "lineBreak": "\n"
+      },
+      "encoding": {
+        "x": {"field": "Year","type": "ordinal"},
+        "y": {"field": "Proportion","type": "quantitative"},
+        "text": {"field": "text","type":"nominal"}
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {"Year": "2020", "Proportion": 0.55},
+          {"Year": "2020", "Proportion": 0.60}
+        ]
+      },
+      "mark": {"type": "line","color": "black","strokeWidth": 1},
+      "encoding": {
+        "x": {"field": "Year","type": "ordinal"},
+        "y": {"field": "Proportion","type": "quantitative"},
+        "order": {"field": "Proportion"}
+      }
+    }
+  ]
+}

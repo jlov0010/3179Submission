@@ -1,0 +1,93 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "title": {"text":"International Orienteering Events by Country", "fontSize":18},
+  "width": 800,
+  "height": 450,
+  "params": [
+    {
+      "name": "continent_select",
+      "value": "All",
+      "bind": {
+        "input": "select",
+        "options": ["All", "Africa", "Asia", "Europe", "North America", "South America", "Oceania"],
+        "labels": ["All Continents", "Africa", "Asia", "Europe", "North America", "South America", "Oceania"],
+        "name": "Select Continent: "
+      }
+    }
+  ],
+  "projection": {
+    "type": "mercator",
+    "scale": {
+      "expr": "continent_select == 'All' ? 100 : continent_select == 'Africa' ? 250 : continent_select == 'Asia' ? 150 : continent_select == 'Europe' ? 300 : continent_select == 'North America' ? 200 : continent_select == 'South America' ? 250 : continent_select == 'Oceania' ? 400 : 100"
+    },
+    "translate": {
+      "expr": "continent_select == 'All' ? [290,225] : continent_select == 'Africa' ? [290,160] : continent_select == 'Asia' ? [190,280] : continent_select == 'Europe' ? [290,500] : continent_select == 'North America' ? [700,350] : continent_select == 'South America' ? [700,0] : continent_select == 'Oceania' ? [-600,-150] : [290,225]"
+    },
+    "center": [0, 20]
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/jlov0010/3179Project/main/World_Countries_7819258759962050834%20(1).json",
+        "format": {"type": "topojson", "feature": "World_Countries_7819258759962050834"}
+      },
+      "transform": [
+        {"filter": "datum.properties.CONTINENT != 'Antarctica'"},
+        {
+          "filter": "continent_select == 'All' || datum.properties.CONTINENT == continent_select || (continent_select == 'Oceania' && (datum.properties.CONTINENT == 'Oceania' || datum.properties.CONTINENT == 'Australia'))"
+        }
+      ],
+      "mark": {"type": "geoshape", "fill": "#e0e0e0", "stroke": "white"}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/jlov0010/3179Project/main/World_Countries_7819258759962050834%20(1).json",
+        "format": {"type": "topojson", "feature": "World_Countries_7819258759962050834"}
+      },
+      "transform": [
+        {"filter": "datum.properties.CONTINENT != 'Antarctica'"},
+        {
+          "lookup": "properties.ISO_CC",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/jlov0010/3179Project/main/InternationalData.csv",
+              "format": {"type": "tsv"}
+            },
+            "key": "Row Labels",
+            "fields": ["Count of discipline", "Sum of numberOfEntries"]
+          },
+          "as": ["event_count", "entries_sum"]
+        },
+        {
+          "filter": "continent_select == 'All' || datum.properties.CONTINENT == continent_select || (continent_select == 'Oceania' && (datum.properties.CONTINENT == 'Oceania' || datum.properties.CONTINENT == 'Australia'))"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white"},
+      "encoding": {
+        "color": {
+          "field": "event_count",
+          "type": "quantitative",
+          "title": "Events Hosted",
+          "scale": {"scheme": "blues"},
+          "legend": {
+            "orient": "right",
+            "offset": 50,
+            "titleFontSize": 14,
+            "labelFontSize": 12,
+            "gradientLength": 250,
+            "direction": "vertical"
+          }
+        },
+        "tooltip": [
+          {"field": "properties.COUNTRY", "title": "Country"},
+          {"field": "properties.CONTINENT", "title": "Continent"},
+          {"field": "event_count", "title": "Events Hosted"},
+          {"field": "entries_sum", "title": "Total Entries"}
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": "transparent"}
+  }
+}
